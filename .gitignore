@@ -1,0 +1,5 @@
+### files to ignore in Chicago-Traffic-Crashes-Analysis-Project repo
+*.zip
+*.DS_Store
+*.DS_Store?
+*.csv
