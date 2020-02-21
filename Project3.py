@@ -3,7 +3,7 @@
 # The dataset can be downloaded at the City of Chicago Data Portal
 # https://data.cityofchicago.org/Transportation/Traffic-Crashes-Crashes/85ca-t3if/data
 
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -24,13 +24,13 @@ df_clean = df1.apply(lambda x: x.fillna("NO") if x.dtype.kind in 'biufc' else x.
 
 
 # The most common day of the week when the crash had happened
+# I don't know what to return common_day or most_com_day and it gives me an error - need some help
 def common_day(df):
 
     days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     index = int(df_clean['CRASH_DAY_OF_WEEK'].mode())
     most_com_day = days_of_week[index]
-    print('\n The most common day of the week when the crash had happened was {}.'.format(most_com_day))
-common_day(df_clean)
+    return common_day
 
 # The most common hour the crash had happened
 def common_hour(df):
@@ -45,37 +45,31 @@ def common_hour(df):
         am_pm = 'pm'
         pop_hour_readable = most_com_hour - 12
     print('\n The most common hour of day when the crash had happened was {} {}.'.format(pop_hour_readable, am_pm))
-common_hour(df_clean)
 
 # The number of fatal injuries in the dataset
 def fatal_injury(df):
     fatal_injury=df_clean[df_clean["MOST_SEVERE_INJURY"].apply(lambda injury: injury=='FATAL')]['MOST_SEVERE_INJURY'].count()
     print('\n There were total {} fatal injuries in the dataset.'.format(fatal_injury))
-fatal_injury(df_clean)
 
 # The number of hit and run accidents
 def hit_and_run(df):
     hit_run=df_clean[df_clean["HIT_AND_RUN_I"].apply(lambda hitrun: hitrun=='Y')]['HIT_AND_RUN_I'].count()
     print('\n There were total {} hit and run accidents in the dataset.'.format(hit_run))
-hit_and_run(df_clean)
 
 # The 5 most common crash types
 def common_type(df):
     com_type=df_clean['FIRST_CRASH_TYPE'].value_counts().head()
     print('\n The 5 most common types of traffic crashes were: \n{}.'.format(com_type))
-common_type(df_clean)
-    
+
 # The 5 most common crash causes
 def common_cause(df):
     com_cause=df_clean["PRIM_CONTRIBUTORY_CAUSE"].value_counts().head()
     print('\n The 5 most common causes of traffic crashes were: \n{}.'.format(com_cause))
-common_cause(df_clean)
 
 # The 4 most common injuries
 def common_injury(df):
     com_injury=df_clean['MOST_SEVERE_INJURY'].value_counts().head(4)
     print('\n The 4 most common injuries caused by traffic crashes were: \n{}.'.format(com_injury))
-common_injury(df_clean)
 
 # Creating a heatmap of most common crash hour, day of week and cause
 def heat_map(df):
@@ -84,30 +78,45 @@ def heat_map(df):
     sns.heatmap(dayHour, cmap='plasma')
     plt.title('HEATMAP BASED ON A CRASH HOUR, CRASH DAY OF WEEK, AND A PRIMARY CONTRIBUTORY CAUSE')
     plt.show()
-heat_map(df_clean)
 
 # The countplot that shows the dollar amount of demage created by traffic crashes
 def damage_plot(df):
     plot1=sns.countplot(x="DAMAGE",data=df_clean,palette='viridis')
     plt.show()
-damage_plot(df_clean)
 
 # The countplot that shows the crash month and damage related to it
 def damage_plot_by_month(df):
     plot2=sns.countplot(x='CRASH_MONTH',data=df_clean,hue='DAMAGE')
     plt.title('CRASH MONTH AND DAMAGE')
     plt.show()
-damage_plot_by_month(df_clean)
 
 # The plot that shows most common crash hour
 def crash_hour_plot(df):
     plot3=sns.countplot(x='CRASH_HOUR', data=df_clean)
     plt.title('MOST COMMON CRASH HOUR')
     plt.show()
-crash_hour_plot(df_clean)
 
 # The graph that shows the number of crashes with a primary contributory cause 'WEATHER'
+# Let work on this line - don't remeber what it means
 df_clean[df_clean['PRIM_CONTRIBUTORY_CAUSE']=='WEATHER'].groupby('CRASH_MONTH').count()['RD_NO'].plot()
 plt.title('Number of Crashes Influenced by Weather')
 plt.tight_layout()
 plt.show()
+
+def main():
+    common_day(df_clean)
+    common_hour(df_clean)
+    fatal_injury(df_clean)
+    hit_and_run(df_clean)
+    common_type(df_clean)
+    common_cause(df_clean)
+    common_injury(df_clean)
+    heat_map(df_clean)
+    damage_plot(df_clean)
+    damage_plot_by_month(df_clean)
+    crash_hour_plot(df_clean)
+
+    print('\n The most common day of the week when the crash had happened was {}.'.format(most_com_day))
+
+if __name__ == "__main__":
+    main()
