@@ -30,7 +30,7 @@ def common_day(df):
     days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     index = int(df_clean['CRASH_DAY_OF_WEEK'].mode())
     most_com_day = days_of_week[index]
-    return common_day
+    return most_com_day
 
 # The most common hour the crash had happened
 def common_hour(df):
@@ -44,32 +44,32 @@ def common_hour(df):
     elif 13 <= most_com_hour < 24:
         am_pm = 'pm'
         pop_hour_readable = most_com_hour - 12
-    print('\n The most common hour of day when the crash had happened was {} {}.'.format(pop_hour_readable, am_pm))
+    return pop_hour_readable, am_pm
 
 # The number of fatal injuries in the dataset
 def fatal_injury(df):
-    fatal_injury=df_clean[df_clean["MOST_SEVERE_INJURY"].apply(lambda injury: injury=='FATAL')]['MOST_SEVERE_INJURY'].count()
-    print('\n There were total {} fatal injuries in the dataset.'.format(fatal_injury))
+    fatal_inj=df_clean[df_clean["MOST_SEVERE_INJURY"].apply(lambda injury: injury=='FATAL')]['MOST_SEVERE_INJURY'].count()
+    return fatal_inj
 
 # The number of hit and run accidents
 def hit_and_run(df):
     hit_run=df_clean[df_clean["HIT_AND_RUN_I"].apply(lambda hitrun: hitrun=='Y')]['HIT_AND_RUN_I'].count()
-    print('\n There were total {} hit and run accidents in the dataset.'.format(hit_run))
+    return hit_run
 
 # The 5 most common crash types
 def common_type(df):
     com_type=df_clean['FIRST_CRASH_TYPE'].value_counts().head()
-    print('\n The 5 most common types of traffic crashes were: \n{}.'.format(com_type))
+    return com_type
 
 # The 5 most common crash causes
 def common_cause(df):
     com_cause=df_clean["PRIM_CONTRIBUTORY_CAUSE"].value_counts().head()
-    print('\n The 5 most common causes of traffic crashes were: \n{}.'.format(com_cause))
+    return com_cause
 
 # The 4 most common injuries
 def common_injury(df):
     com_injury=df_clean['MOST_SEVERE_INJURY'].value_counts().head(4)
-    print('\n The 4 most common injuries caused by traffic crashes were: \n{}.'.format(com_injury))
+    return com_injury
 
 # Creating a heatmap of most common crash hour, day of week and cause
 def heat_map(df):
@@ -104,19 +104,33 @@ plt.tight_layout()
 plt.show()
 
 def main():
-    common_day(df_clean)
-    common_hour(df_clean)
-    fatal_injury(df_clean)
-    hit_and_run(df_clean)
-    common_type(df_clean)
-    common_cause(df_clean)
-    common_injury(df_clean)
+    most_com_day  = common_day(df_clean)
+    print('\n The most common day of the week when the crash had happened was {}.'.format(most_com_day))
+
+    pop_hour_readable, am_pm = common_hour(df_clean)
+    print('\n The most common hour of day when the crash had happened was {} {}.'.format(pop_hour_readable, am_pm))
+
+    fatal_inj = fatal_injury(df_clean)
+    print('\n There were total {} fatal injuries in the dataset.'.format(fatal_inj))
+
+    hit_run = hit_and_run(df_clean)
+    print('\n There were total {} hit and run accidents in the dataset.'.format(hit_run))
+
+    com_type = common_type(df_clean)
+    print('\n The 5 most common types of traffic crashes were: \n{}.'.format(com_type))
+
+    com_cause = common_cause(df_clean)
+    print('\n The 5 most common causes of traffic crashes were: \n{}.'.format(com_cause))
+
+    com_injury = common_injury(df_clean)
+    print('\n The 4 most common injuries caused by traffic crashes were: \n{}.'.format(com_injury))
+
     heat_map(df_clean)
     damage_plot(df_clean)
     damage_plot_by_month(df_clean)
     crash_hour_plot(df_clean)
 
-    print('\n The most common day of the week when the crash had happened was {}.'.format(most_com_day))
+
 
 if __name__ == "__main__":
     main()
